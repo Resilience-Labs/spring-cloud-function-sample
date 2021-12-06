@@ -1,0 +1,47 @@
+test {
+    useJUnitPlatform()
+    finalizedBy jacocoTestReport
+}
+
+tasks.withType(Test) {
+    testLogging {
+        exceptionFormat "full"
+        events "passed", "failed", "skipped"
+    }
+}
+
+pitest {
+    pitestVersion = "1.5.2"
+    testPlugin = "junit5"
+    junit5PluginVersion = '0.12'
+    targetClasses = ['com.resilience.labs.*']
+    excludedClasses = [
+            '**.domain.**',
+    ]
+    threads = 4
+    outputFormats = ['XML', 'HTML']
+    coverageThreshold = 90
+    reportDir = file('build/reports/mutation-tests-results')
+    timestampedReports = false
+    mutators = ['CONDITIONALS_BOUNDARY',
+                'INCREMENTS',
+                'INVERT_NEGS',
+                'MATH',
+                'NEGATE_CONDITIONALS',
+                'RETURN_VALS',
+                'VOID_METHOD_CALLS',
+                'INLINE_CONSTS',
+                'REMOVE_CONDITIONALS',
+                'EMPTY_RETURNS',
+                'FALSE_RETURNS',
+                'TRUE_RETURNS',
+                'NULL_RETURNS',
+                'PRIMITIVE_RETURNS']
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true
+        html.enabled = false
+    }
+}
